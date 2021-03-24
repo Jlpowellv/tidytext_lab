@@ -32,7 +32,6 @@ You'll need to select several newspapers from different regions in the country l
 
 
 
-
 Your main goal (and the goal of all practicing data scientists!) is to translate this information into action. What patterns do you see, why do you believe this to be the case? What additional information might you want? Be as specific as possible, but keep in mind this is an initial exploratory effort...more analysis might be needed...but the result can and should advise the next steps you present to the firm. 
 
 
