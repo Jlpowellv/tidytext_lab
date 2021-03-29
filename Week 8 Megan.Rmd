@@ -15,11 +15,13 @@ library(tidyverse)
 library(tidytext)
 #install.packages("ggwordcloud")
 library(ggwordcloud)
-install.packages("gutenbergr") 
+#install.packages("gutenbergr") 
 library(gutenbergr)
 #install.packages('textdata')
 library(textdata)
-setwd("/cloud/project/tidytext_lab")
+#install.packages("striprtf")
+library("striprtf")
+setwd("/cloud/project")
 save.image("tidytext.RData")
 ```
 
@@ -28,9 +30,6 @@ Congratulations you've successfully transferred from being a NBA 'quant' scout t
 Our team will be evaluating documents from 2010-present on artifical intelligence. Megan will be researching newspapers from Asia-- specifically China Daily and the Korea Herald.
 
 You'll need to select several newspapers from different regions in the country limiting the search to 100 articles from each paper, run sentiment analysis with each newspaper serving as a corpus and then compare the level of positive or negative connotation associated with the outcomes. Also, run tf-idf on each corpus (newspapers) and work to compare the differences between the distributions (5 to 6 newspapers should be fine)
-
-
-
 
 
 Your main goal (and the goal of all practicing data scientists!) is to translate this information into action. What patterns do you see, why do you believe this to be the case? What additional information might you want? Be as specific as possible, but keep in mind this is an initial exploratory effort...more analysis might be needed...but the result can and should advise the next steps you present to the firm. 
@@ -48,3 +47,28 @@ Rstudio Guidance on Git and Github (Including Branching/Pull Requests): https://
 Here is the link to the database search via the UVA Library that should lead you to LexusNexus (Now Nexas Uni)
 https://guides.lib.virginia.edu/az.php?a=l
 
+Read in data from each source (China Daily and the Korea Hearld)
+```{r echo=FALSE}
+china_files <- list.files(path="/cloud/project/China Daily", pattern="*rtf", full.names=TRUE, recursive=FALSE)
+
+korea_files <- list.files(path="/cloud/project/Korea Herald", pattern="*rtf", full.names=TRUE, recursive=FALSE)
+```
+
+Iterate through each file and extract the data using an rtf reader & turn it into a tibble
+Rename the column of data to have the name "article" for easier access
+Get the word count in the article
+
+```{r echo=FALSE}
+for (file in china_files){
+  data<-tibble(read_rtf(file, verbose = FALSE, ignore_tables = FALSE, check_file = TRUE))
+  colnames(data) <- "article"
+  data$article <- as.character(data$article)
+  
+  data <- data %>%
+  unnest_tokens(word, article)%>%
+  anti_join(stop_words)%>% 
+  count(word, sort=TRUE)
+  View(data)
+  break
+}
+```
