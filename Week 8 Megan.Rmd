@@ -32,6 +32,11 @@ Our team will be evaluating documents from 2010-present on artifical intelligenc
 You'll need to select several newspapers from different regions in the country limiting the search to 100 articles from each paper, run sentiment analysis with each newspaper serving as a corpus and then compare the level of positive or negative connotation associated with the outcomes. Also, run tf-idf on each corpus (newspapers) and work to compare the differences between the distributions (5 to 6 newspapers should be fine)
 
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 6b6fd2a3ca9ed8786398bf270f09b9f453ee4b83
 Your main goal (and the goal of all practicing data scientists!) is to translate this information into action. What patterns do you see, why do you believe this to be the case? What additional information might you want? Be as specific as possible, but keep in mind this is an initial exploratory effort...more analysis might be needed...but the result can and should advise the next steps you present to the firm. 
 
 
