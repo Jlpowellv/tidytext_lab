@@ -129,6 +129,41 @@ head(africa)
 head(england)
 ```
 
+## Sentiment Analysis Methods {.tabset}
+Each method's scoring is stored in a list so it must first be extracted before further analysis can be done. The method's are stored in the list in this order: afinn, nrc, then bing. The list must be indexed to access each of these newspaper's specific method's dataframes from earlier.
+
+### AFINN Sentiment Analysis Conclusions
+To evaluate the afinn method on these six newspapers, we multiplied the number of occurrences of a word by its positive/negative value, then averaged them to get an overall positive/negative magnitude.
+
+The afinn average score for each newspaper is stored in a table with the first column as the newspaper name and the second as the overall average value as pictured below
+```{r echo=FALSE, include = FALSE}
+afinn<- data.frame(row.names = c("Newspaper", "Average Value"))
+
+avg_afinn<-function(afinn_data){}
+
+head(afinn)
+```
+
+### NRC Sentiment Analysis Conclusions
+To evaluate the nrc method on these six newspapers, we further consolidated using the sentiment associated with each word so that the first column contained the newspaper, the second column contained the sentiments, and the third column contained the total count for the newspaper.
+```{r echo=FALSE, include = FALSE}
+nrc<- data.frame(row.names = c("Newspaper", "Sentiment", "Total Count"))
+
+avg_nrc<-function(nrc_data){}
+
+head(nrc)
+```
+
+### BING Sentiment Analysis Conclusions
+To evaluate the bing method on these six newspapers, we further consolidated using the positive/negative association with each word so that the first column contained the newspaper, the second column contained positive/negative, and the third column contained the total count for the newspaper.
+```{r echo=FALSE, include = FALSE}
+bing<- data.frame(row.names = c("Newspaper", "Positive/Negative", "Total Count"))
+
+avg_bing<-function(nrc_data){}
+
+head(bing)
+```
+
 ## TF-IDF
 TF-IDF is a measure of originality  of a word by comparing the number of times a word appears in an article to the number of times the word appears in the corpus (newspaper).
 
@@ -198,3 +233,8 @@ inag_words <- inag_words %>%
 ```{r echo = FALSE, include = TRUE}
 head(inag_words)
 ```
+
+
+## Final Analysis
+Summary of the afinn, nrc, and bing stuff here
+summary of what the tf-idf tells us
