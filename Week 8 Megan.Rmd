@@ -57,8 +57,15 @@ korea_files <- list.files(path="/cloud/project/Korea Herald", pattern="*rtf", fu
 Iterate through each file and extract the data using an rtf reader & turn it into a tibble
 Rename the column of data to have the name "article" for easier access
 Get the word count in the article
+Use sentiment analysis on the article
 
-```{r echo=FALSE}
+tf-idf
+```{r echo=FALSE, include = FALSE}
+
+china_afinn<-data.frame(row.names=c("word", "name", "value"))
+china_nrc<-data.frame(row.names=c("word", "n", "sentiment"))
+china_bing<-data.frame(row.names=c("word", "n", "sentiment"))
+
 for (file in china_files){
   data<-tibble(read_rtf(file, verbose = FALSE, ignore_tables = FALSE, check_file = TRUE))
   colnames(data) <- "article"
@@ -68,7 +75,29 @@ for (file in china_files){
   unnest_tokens(word, article)%>%
   anti_join(stop_words)%>% 
   count(word, sort=TRUE)
-  View(data)
-  break
+
+  data_afinn <- data %>%
+    inner_join(get_sentiments("afinn"))
+  
+  china_afinn <- rbind(china_afinn, data_afinn)
+  
+  data_nrc <- data %>%
+    inner_join(get_sentiments("nrc"))
+  china_nrc <- rbind(china_nrc, data_nrc)
+  
+  data_bing <- data %>%
+    inner_join(get_sentiments("bing"))
+  
+  china_bing <- rbind(china_bing, data_bing)
 }
+
+```
+
+Aggregate the data from each article so there are no repeat words
+Drop any extra columns
+Rename the new columns accordingly
+```{r echo=FALSE, include = FALSE}
+agg_china_afinn <- china_afinn %>% group_by(word, value) %>% summarise(TotalCount = sum(n))
+agg_china_nrc <- china_nrc %>% group_by(word, sentiment) %>% summarise(TotalCount = sum(n))
+agg_china_bing <- china_bing %>% group_by(word, sentiment) %>% summarise(TotalCount = sum(n))
 ```
