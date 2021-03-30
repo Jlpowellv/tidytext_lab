@@ -1,0 +1,200 @@
+---
+title: "Week 8 Megan"
+author: "Megan Lin"
+date: "3/24/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(stringr)
+
+library(tidyverse)
+#install.packages("tidytext")
+library(tidytext)
+#install.packages("ggwordcloud")
+library(ggwordcloud)
+#install.packages("gutenbergr") 
+library(gutenbergr)
+#install.packages('textdata')
+library(textdata)
+#install.packages("striprtf")
+library("striprtf")
+setwd("/cloud/project")
+save.image("tidytext.RData")
+```
+
+Our team will be evaluating documents from 2010-present on artificial intelligence. Megan will be researching newspapers from Asia-- specifically China Daily and the Korea Herald. Eva found articles from The Sun (England) and Business Daily (South Africa). James found articles from USA Today and The NY Times.
+
+## Prepare the Data
+First, we read in data from each source which were uploaded into separate folders in our workspace. The names of these folders matches the name of the newspapers they were pulled from. An rtf reader was used to help extract the text from these articles.
+```{r echo=FALSE}
+china_files <- list.files(path="/cloud/project/China Daily", pattern="*rtf", full.names=TRUE, recursive=FALSE)
+
+korea_files <- list.files(path="/cloud/project/Korea Herald", pattern="*rtf", full.names=TRUE, recursive=FALSE)
+
+NY_files <- list.files(path="/cloud/project/TheNewYorkTimes", pattern="*rtf", full.names=TRUE, recursive=FALSE)
+
+US_files <- list.files(path="/cloud/project/USAToday", pattern="*rtf", full.names=TRUE, recursive=FALSE)
+
+Africa_files <- list.files(path="/cloud/project/Business Day (South Africa)", pattern="*rtf", full.names=TRUE, recursive=FALSE)
+
+Eng_files <- list.files(path="/cloud/project/The Sun (England)", pattern="*rtf", full.names=TRUE, recursive=FALSE)
+```
+
+## Sentiment Analysis
+Next, we made a sentiment analysis helper function to help automate the analysis process.
+
+The sentiment analysis takes in the list of files for a newspaper, then:
+Iterates through each file
+Extracts the data using an rtf reader & turn it into a tibble
+Renames the column of data to have the name "article" for easier access
+Gets the word count in the article
+Use afinn, nrc, and bing sentiment analysis methods to extract sentiments from the text
+Aggregate the article data so that the occurrences of each word are summed and there are no repeat words
+
+```{r echo=FALSE, include = FALSE}
+sentiment_analysis = function(files){
+  afinn<-data.frame(row.names=c("word", "name", "value"))
+  nrc<-data.frame(row.names=c("word", "n", "sentiment"))
+  bing<-data.frame(row.names=c("word", "n", "sentiment"))
+  
+  for (file in files){
+    data<-tibble(read_rtf(file, verbose = FALSE, ignore_tables = FALSE, check_file = TRUE))
+    colnames(data) <- "article"
+    data$article <- as.character(data$article)
+    
+    data <- data %>%
+    unnest_tokens(word, article)%>%
+    anti_join(stop_words)%>% 
+    count(word, sort=TRUE)
+  
+    data_afinn <- data %>%
+      inner_join(get_sentiments("afinn"))
+    
+    afinn <- rbind(afinn, data_afinn)
+    
+    data_nrc <- data %>%
+      inner_join(get_sentiments("nrc"))
+    nrc <- rbind(nrc, data_nrc)
+    
+    data_bing <- data %>%
+      inner_join(get_sentiments("bing"))
+    
+    bing <- rbind(bing, data_bing)
+  }
+  agg_afinn <- afinn %>% group_by(word, value) %>% summarise(TotalCount = sum(n))
+  agg_nrc <- nrc %>% group_by(word, sentiment) %>% summarise(TotalCount = sum(n))
+  agg_bing <- bing %>% group_by(word, sentiment) %>% summarise(TotalCount = sum(n))
+  s_list<-list(agg_afinn, agg_nrc, agg_bing)
+  return (s_list)
+}
+```
+
+The sentiment analysis helper function was then run on all 6 newspapers
+```{r echo=FALSE, include = FALSE}
+china<-sentiment_analysis(china_files)
+korea<-sentiment_analysis(korea_files)
+ny<-sentiment_analysis(NY_files)
+us<-sentiment_analysis(US_files)
+africa<-sentiment_analysis(Africa_files)
+england<-sentiment_analysis(Eng_files)
+```
+
+## Sentiment Analysis Tables {.tabset}
+
+### China Daily
+```{r echo=FALSE}
+head(china)
+```
+### Korea Herald
+```{r echo=FALSE}
+head(korea)
+```
+### New York Times
+```{r echo=FALSE}
+head(ny)
+```
+### USA Today
+```{r echo=FALSE}
+head(us)
+```
+### Business Day
+```{r echo=FALSE}
+head(africa)
+```
+### The Sun
+```{r echo=FALSE}
+head(england)
+```
+
+## TF-IDF
+TF-IDF is a measure of originality  of a word by comparing the number of times a word appears in an article to the number of times the word appears in the corpus (newspaper).
+
+A helper method to remove blank lines called "data_prep" was made to consolidate text into a 1x1 object.
+```{r echo=FALSE, include = FALSE}
+data_prep <- function(x,y,z){
+  i <- as_tibble(t(x))
+  ii <- unite(i,"text",y:z,remove = TRUE,sep = "")
+}
+
+corpus <- function(files){
+  overall=data.frame()
+   for (file in files){
+      data<-tibble(read_rtf(file, verbose = FALSE, ignore_tables = FALSE, check_file = TRUE))
+      colnames(data) <- "text"
+      data$text <- as.character(data$text)
+      
+      overall <- bind_rows(overall, data)
+   }
+  return(overall)
+}
+
+```
+
+```{r echo = FALSE, include = FALSE}
+china_corpus <- corpus(china_files)
+korea_corpus <- corpus(korea_files)
+Africa_corpus <- corpus(Africa_files)
+Eng_corpus <- corpus(Eng_files)
+NY_corpus <- corpus(NY_files)
+US_corpus <- corpus(US_files)
+```
+
+
+```{r echo = FALSE, include = FALSE}
+china_corpus_prep <- data_prep(china_corpus, 'V1', 'V6257')
+korea_corpus_prep <- data_prep(korea_corpus, 'V1', 'V4174')
+Africa_corpus_prep <- data_prep(Africa_corpus, 'V1', 'V4820')
+Eng_corpus_prep <- data_prep(Eng_corpus, 'V1', 'V5101')
+NY_corpus_prep <- data_prep(NY_corpus, 'V1', 'V6601')
+US_corpus_prep <- data_prep(US_corpus, 'V1','V5604')
+```
+
+Next, we ran the tf_idf code on the consolidated corpuses to get the term and in document frequencies for each word by newspaper.
+```{r echo = FALSE}
+newspapers <- c("China Daily","Korea Herald","Business Day", "The Sun", "NY Times", "USA Today")
+tf_idf_text <- tibble(newspapers,text=t(tibble(china_corpus_prep,korea_corpus_prep, Africa_corpus_prep,
+                                               Eng_corpus_prep,NY_corpus_prep, US_corpus_prep, .name_repair =
+                                               "universal")))
+
+word_count <- tf_idf_text %>%
+  unnest_tokens(word, text) %>%
+  count(newspapers, word, sort = TRUE)
+
+
+total_words <- word_count %>% 
+  group_by(newspapers) %>% 
+  summarize(total = sum(n))
+
+inag_words <- left_join(word_count, total_words)
+
+inag_words <- inag_words %>%
+  bind_tf_idf(word, newspapers, n)
+```
+
+## TF-IDF Table
+```{r echo = FALSE, include = TRUE}
+head(inag_words)
+```
