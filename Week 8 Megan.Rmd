@@ -104,3 +104,5 @@ agg_china_afinn <- china_afinn %>% group_by(word, value) %>% summarise(TotalCoun
 agg_china_nrc <- china_nrc %>% group_by(word, sentiment) %>% summarise(TotalCount = sum(n))
 agg_china_bing <- china_bing %>% group_by(word, sentiment) %>% summarise(TotalCount = sum(n))
 ```
+
+Get the average for each 
