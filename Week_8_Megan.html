@@ -171,9 +171,7 @@ pre code {
 </div>
 
 
-<p>Our team will be evaluating documents from 2010-present on artificial intelligence. Megan will be researching newspapers from Asia– specifically China Daily and the Korea Herald.</p>
-<p>You’ll need to select several newspapers from different regions in the country limiting the search to 100 articles from each paper, run sentiment analysis with each newspaper serving as a corpus and then compare the level of positive or negative connotation associated with the outcomes. Also, run tf-idf on each corpus (newspapers) and work to compare the differences between the distributions (5 to 6 newspapers should be fine)</p>
-<p>Please submit a cleanly knitted HTML file describing in detail the steps you took along the way, the results of your analysis and most importantly the implications/next steps you would recommend. You will report your final results and recommendations next week in class. This will be 5 minutes per group.</p>
+<p>Our team will be evaluating documents from 2010-present on artificial intelligence. Megan will be researching newspapers from Asia– specifically China Daily and the Korea Herald. Eva found articles from The Sun (England) and Business Daily (South Africa). James found articles from USA Today and The NY Times.</p>
 <div id="prepare-the-data" class="section level2">
 <h2>Prepare the Data</h2>
 <p>First, we read in data from each source which were uploaded into separate folders in our workspace. The names of these folders matches the name of the newspapers they were pulled from. An rtf reader was used to help extract the text from these articles.</p>
@@ -344,7 +342,9 @@ pre code {
 ##  9 accomplished   positive           3
 ## 10 accomplishment positive           1
 ## # … with 1,297 more rows</code></pre>
-<p>###USA Today</p>
+</div>
+<div id="usa-today" class="section level3">
+<h3>USA Today</h3>
 <pre><code>## [[1]]
 ## # A tibble: 723 x 3
 ## # Groups:   word [723]
@@ -503,57 +503,46 @@ pre code {
 ## # … with 807 more rows</code></pre>
 </div>
 </div>
+<div id="sentiment-analysis-methods" class="section level2 tabset">
+<h2 class="tabset">Sentiment Analysis Methods</h2>
+<p>Each method’s scoring is stored in a list so it must first be extracted before further analysis can be done. The method’s are stored in the list in this order: afinn, nrc, then bing. The list must be indexed to access each of these newspaper’s specific method’s dataframes from earlier. As a group we decided that the combination of afinn and bing models was more than enough to cover the general sentiment of the news sources regarding artificial intelligence so nrc was earlier calculated, but will not be evaluated.</p>
+<div id="afinn-sentiment-analysis-conclusions" class="section level3">
+<h3>AFINN Sentiment Analysis Conclusions</h3>
+<p>To evaluate the afinn method on these six newspapers, we multiplied the number of occurrences of a word by its positive/negative value, then averaged them to get an overall positive/negative magnitude.</p>
+<p>The afinn average score for each newspaper is stored in a table with the first column as the newspaper name and the second as the overall average value as pictured below</p>
+<pre><code>##                     Newspaper Average Value
+## 1                   USA Today     0.3211354
+## 2              New York Times     0.2060881
+## 3            The Sun (England     0.2566903
+## 4 Business Day (South Africa)     0.4058553
+## 5                Korea Herald     0.8332662
+## 6                 China Daily     0.9255370</code></pre>
+<p>Based on the afinn method, we see that China Daily has the highest average score of 0.925 which means that they likely have the most positive outlook on artificial intelligence in the future. Based on this assessment, The New York Times has the least positive outlook on artificial intelligence with an average score of 0.206.</p>
+<p>Interestingly, all news sources throughout these chosen countries used mostly positive language when writing about artificial intelligence which can be seen by the all positive scores.</p>
+</div>
+<div id="bing-sentiment-analysis-conclusions" class="section level3">
+<h3>BING Sentiment Analysis Conclusions</h3>
+<p>To evaluate the bing method on these six newspapers, we further consolidated using the positive/negative association with each word so that the first column contained the newspaper, the second column contained positive/negative, and the third column contained the total count for the newspaper.</p>
+<pre><code>##                      Newspaper Sentiment Total Count
+## 1                  China Daily  positive        2175
+## 2                  China Daily  negative         605
+## 3                 Korea Herald  positive        2065
+## 4                 Korea Herald  negative         975
+## 5  Business Day (South Africa)  positive        2207
+## 6  Business Day (South Africa)  negative        1632
+## 7             The Sun (England  positive        1182
+## 8             The Sun (England  negative         890
+## 9               New York Times  positive        3306
+## 10              New York Times  negative        3101
+## 11                   USA Today  positive        2087
+## 12                   USA Today  negative        1529</code></pre>
+</div>
+</div>
 <div id="tf-idf" class="section level2">
 <h2>TF-IDF</h2>
 <p>TF-IDF is a measure of originality of a word by comparing the number of times a word appears in an article to the number of times the word appears in the corpus (newspaper).</p>
 <p>A helper method to remove blank lines called “data_prep” was made to consolidate text into a 1x1 object.</p>
-</div>
-<div id="prepped-data-tables" class="section level2">
-<h2>Prepped Data Tables</h2>
-<pre><code>##                                                       text
-## 1                                                         
-## 2                                                         
-## 3                                                         
-## 4 Are we prepared for the rise of artificial intelligence?
-## 5                                              China Daily
-## 6                                    March 11, 2016 Friday</code></pre>
-<pre><code>##                                                                                             text
-## 1                                                                                               
-## 2                                                                                               
-## 3                                                                                               
-## 4 [67th Anniversary Special] Blurring lines in Korea&#39;s industries: manufacturing merges with AI 
-## 5                                                                               THE KOREA HERALD
-## 6                                                                      August 12, 2020 Wednesday</code></pre>
-<pre><code>##                          text
-## 1                            
-## 2                            
-## 3                            
-## 4                          \r
-## 5                            
-## 6 Business Day (South Africa)</code></pre>
-<pre><code>##                text
-## 1                  
-## 2                  
-## 3                  
-## 4                \r
-## 5                  
-## 6 The Sun (England)</code></pre>
-<pre><code>##                 text
-## 1                   
-## 2                   
-## 3                   
-## 4                 \r
-## 5                   
-## 6 The New York Times</code></pre>
-<pre><code>##        text
-## 1          
-## 2          
-## 3          
-## 4        \r
-## 5          
-## 6 USA TODAY</code></pre>
-<p>Data prep it for tf-idf</p>
-<p>Run tf-idf</p>
+<p>Next, we ran the tf_idf code on the consolidated corpuses to get the term and in document frequencies for each word by newspaper.</p>
 <pre><code>## New names:
 ## * text -&gt; text...1
 ## * text -&gt; text...2
@@ -574,6 +563,11 @@ pre code {
 ## 4 USA Today    the    3778  87306 0.0433     0      0
 ## 5 NY Times     of     3691 138126 0.0267     0      0
 ## 6 Korea Herald the    3636  78031 0.0466     0      0</code></pre>
+</div>
+<div id="final-analysis" class="section level2">
+<h2>Final Analysis</h2>
+<p>Summary of the afinn, nrc, and bing stuff here</p>
+<p>summary of what the tf-idf tells us</p>
 </div>
 
 
