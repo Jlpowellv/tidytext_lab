@@ -505,7 +505,7 @@ pre code {
 </div>
 <div id="sentiment-analysis-methods" class="section level2 tabset">
 <h2 class="tabset">Sentiment Analysis Methods</h2>
-<p>Each method’s scoring is stored in a list so it must first be extracted before further analysis can be done. The method’s are stored in the list in this order: afinn, nrc, then bing. The list must be indexed to access each of these newspaper’s specific method’s dataframes from earlier. As a group we decided that the combination of afinn and bing models was more than enough to cover the general sentiment of the news sources regarding artificial intelligence so nrc was earlier calculated, but will not be evaluated.</p>
+<p>Each method’s scoring is stored in a list so it must first be extracted before further analysis can be done. The method’s are stored in the list in this order: afinn, nrc, then bing. The list must be indexed to access each of these newspaper’s specific method’s dataframes from earlier. As a group we decided that the combination of afinn and bing models paired better together to describe the connotations associated with artificial intelligence in a more quantitative method with a clear cut between positive and negative. While NRC was interesting in separating them into separate sentiments, we thought this combination would be more effective.</p>
 <div id="afinn-sentiment-analysis-conclusions" class="section level3">
 <h3>AFINN Sentiment Analysis Conclusions</h3>
 <p>To evaluate the afinn method on these six newspapers, we multiplied the number of occurrences of a word by its positive/negative value, then averaged them to get an overall positive/negative magnitude.</p>

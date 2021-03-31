@@ -130,7 +130,7 @@ head(england)
 ```
 
 ## Sentiment Analysis Methods {.tabset}
-Each method's scoring is stored in a list so it must first be extracted before further analysis can be done. The method's are stored in the list in this order: afinn, nrc, then bing. The list must be indexed to access each of these newspaper's specific method's dataframes from earlier. As a group we decided that the combination of afinn and bing models was more than enough to cover the general sentiment of the news sources regarding artificial intelligence so nrc was earlier calculated, but will not be evaluated.
+Each method's scoring is stored in a list so it must first be extracted before further analysis can be done. The method's are stored in the list in this order: afinn, nrc, then bing. The list must be indexed to access each of these newspaper's specific method's dataframes from earlier. As a group we decided that the combination of afinn and bing models paired better together to describe the connotations associated with artificial intelligence in a more quantitative method with a clear cut between positive and negative. While NRC was interesting in separating them into separate sentiments, we thought this combination would be more effective.
 
 ### AFINN Sentiment Analysis Conclusions
 To evaluate the afinn method on these six newspapers, we multiplied the number of occurrences of a word by its positive/negative value, then averaged them to get an overall positive/negative magnitude.
@@ -169,11 +169,8 @@ Interestingly, all news sources throughout these chosen countries used mostly po
 ### BING Sentiment Analysis Conclusions
 To evaluate the bing method on these six newspapers, we further consolidated using the positive/negative association with each word so that the first column contained the newspaper, the second column contained positive/negative, and the third column contained the total count for the newspaper.
 
-
-
 ```{r echo=FALSE, include = TRUE}
 bing<- data.frame(row.names = c("Newspaper", "Positive/Negative", "Total Count"))
-
 avg_bing<-function(ds, bing_data, Newspaper){
   data <- bing_data[[3]]
   p_count <- 0
@@ -188,6 +185,7 @@ avg_bing<-function(ds, bing_data, Newspaper){
   }
   pos <- data.frame(Newspaper, "positive", p_count)
   neg <- c(Newspaper, "negative", n_count)
+  
   entry_data <- rbind(pos, neg)
   return(rbind(ds, entry_data))
   
@@ -250,8 +248,7 @@ US_corpus_prep <- data_prep(US_corpus, 'V1','V5604')
 Next, we ran the tf_idf code on the consolidated corpuses to get the term and in document frequencies for each word by newspaper.
 ```{r echo = FALSE}
 newspapers <- c("China Daily","Korea Herald","Business Day", "The Sun", "NY Times", "USA Today")
-tf_idf_text <- tibble(newspapers,text=t(tibble(china_corpus_prep,korea_corpus_prep, Africa_corpus_prep,
-                                               Eng_corpus_prep,NY_corpus_prep, US_corpus_prep, .name_repair =
+tf_idf_text <- tibble(newspapers,text=t(tibble(china_corpus_prep,korea_corpus_prep, Africa_corpus_prep,Eng_corpus_prep,NY_corpus_prep, US_corpus_prep, .name_repair =
                                                "universal")))
 
 word_count <- tf_idf_text %>%
@@ -266,12 +263,13 @@ total_words <- word_count %>%
 inag_words <- left_join(word_count, total_words)
 
 inag_words <- inag_words %>%
-  bind_tf_idf(word, newspapers, n)
+  bind_tf_idf(word, newspapers, n) %>%
+  anti_join(stop_words)
 ```
 
 ## TF-IDF Table
 ```{r echo = FALSE, include = TRUE}
-head(inag_words)
+inag_words[with(inag_words, order(-tf_idf)), ]
 ```
 
 
