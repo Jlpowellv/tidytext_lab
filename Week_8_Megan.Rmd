@@ -130,37 +130,73 @@ head(england)
 ```
 
 ## Sentiment Analysis Methods {.tabset}
-Each method's scoring is stored in a list so it must first be extracted before further analysis can be done. The method's are stored in the list in this order: afinn, nrc, then bing. The list must be indexed to access each of these newspaper's specific method's dataframes from earlier.
+Each method's scoring is stored in a list so it must first be extracted before further analysis can be done. The method's are stored in the list in this order: afinn, nrc, then bing. The list must be indexed to access each of these newspaper's specific method's dataframes from earlier. As a group we decided that the combination of afinn and bing models was more than enough to cover the general sentiment of the news sources regarding artificial intelligence
 
 ### AFINN Sentiment Analysis Conclusions
 To evaluate the afinn method on these six newspapers, we multiplied the number of occurrences of a word by its positive/negative value, then averaged them to get an overall positive/negative magnitude.
 
 The afinn average score for each newspaper is stored in a table with the first column as the newspaper name and the second as the overall average value as pictured below
 ```{r echo=FALSE, include = FALSE}
-afinn<- data.frame(row.names = c("Newspaper", "Average Value"))
+afinn <- data.frame(row.names = c("1", "2"))
 
-avg_afinn<-function(afinn_data){}
+avg_afinn<-function(ds, afinn_data, name){
+  data <- afinn_data[[1]]
+  value <- 0
+  total <- 0
+  for (i in 1:nrow(data)){
+    value <- value + data$value[i] * data$TotalCount[i]
+    total <- total + data$TotalCount[i]
+  } 
+  avg <- value / total
+  entry_data <- data.frame(name, avg)
 
+  return(rbind(entry_data, ds))
+}
+
+afinn <- avg_afinn(afinn, china, "China Daily")
+afinn <- avg_afinn(afinn, korea, "Korea Herald")
+afinn <- avg_afinn(afinn, africa, "Business Day (South Africa)")
+afinn <- avg_afinn(afinn, england, "The Sun (England")
+afinn <- avg_afinn(afinn, ny, "New York Times")
+afinn <- avg_afinn(afinn, us, "USA Today")
+names(afinn) <- c("Newspaper", "Average Value")
 head(afinn)
 ```
 
-### NRC Sentiment Analysis Conclusions
-To evaluate the nrc method on these six newspapers, we further consolidated using the sentiment associated with each word so that the first column contained the newspaper, the second column contained the sentiments, and the third column contained the total count for the newspaper.
-```{r echo=FALSE, include = FALSE}
-nrc<- data.frame(row.names = c("Newspaper", "Sentiment", "Total Count"))
 
-avg_nrc<-function(nrc_data){}
 
-head(nrc)
-```
+
 
 ### BING Sentiment Analysis Conclusions
 To evaluate the bing method on these six newspapers, we further consolidated using the positive/negative association with each word so that the first column contained the newspaper, the second column contained positive/negative, and the third column contained the total count for the newspaper.
 ```{r echo=FALSE, include = FALSE}
 bing<- data.frame(row.names = c("Newspaper", "Positive/Negative", "Total Count"))
 
-avg_bing<-function(nrc_data){}
-
+avg_bing<-function(ds, bing_data, Newspaper){
+  data <- bing_data[[3]]
+  p_count <- 0
+  n_count <- 0
+  for (i in 1:nrow(data)){
+    if (data$sentiment[i] == "positive"){
+      p_count <- p_count + data$TotalCount[i]
+    }
+    else {
+      n_count <- n_count + data$TotalCount[i]
+    }
+  }
+  pos <- data.frame(Newspaper, "positive", p_count)
+  neg <- c(Newspaper, "negative", n_count)
+  entry_data <- rbind(pos, neg)
+  return(rbind(ds, entry_data))
+  
+}
+bing <- avg_bing(bing, china, "China Daily")
+bing <- avg_bing(bing, korea, "Korea Herald")
+bing <- avg_bing(bing, africa, "Business Day (South Africa)")
+bing <- avg_bing(bing, england, "The Sun (England")
+bing <- avg_bing(bing, ny, "New York Times")
+bing <- avg_bing(bing, us, "USA Today")
+names(bing) <- c("Newspaper", "Sentiment", "Total Count")
 head(bing)
 ```
 
@@ -237,4 +273,6 @@ head(inag_words)
 
 ## Final Analysis
 Summary of the afinn, nrc, and bing stuff here
+
+
 summary of what the tf-idf tells us
