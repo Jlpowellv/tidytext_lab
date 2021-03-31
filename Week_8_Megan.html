@@ -510,15 +510,15 @@ pre code {
 <h3>AFINN Sentiment Analysis Conclusions</h3>
 <p>To evaluate the afinn method on these six newspapers, we multiplied the number of occurrences of a word by its positive/negative value, then averaged them to get an overall positive/negative magnitude.</p>
 <p>The afinn average score for each newspaper is stored in a table with the first column as the newspaper name and the second as the overall average value as pictured below</p>
-<pre><code>##                     Newspaper Average Value
-## 1                   USA Today     0.3211354
-## 2              New York Times     0.2060881
-## 3            The Sun (England     0.2566903
-## 4 Business Day (South Africa)     0.4058553
-## 5                Korea Herald     0.8332662
-## 6                 China Daily     0.9255370</code></pre>
+<pre><code>##                     Newspaper AverageValue
+## 6                 China Daily    0.9255370
+## 5                Korea Herald    0.8332662
+## 4 Business Day (South Africa)    0.4058553
+## 1                   USA Today    0.3211354
+## 3            The Sun (England    0.2566903
+## 2              New York Times    0.2060881</code></pre>
 <p>Based on the afinn method, we see that China Daily has the highest average score of 0.925 which means that they likely have the most positive outlook on artificial intelligence in the future. Based on this assessment, The New York Times has the least positive outlook on artificial intelligence with an average score of 0.206.</p>
-<p>Interestingly, all news sources throughout these chosen countries used mostly positive language when writing about artificial intelligence which can be seen by the all positive scores.</p>
+<p>Interestingly, all news sources throughout these chosen countries used mostly positive language when writing about artificial intelligence which can be seen by the all positive average scores.</p>
 </div>
 <div id="bing-sentiment-analysis-conclusions" class="section level3">
 <h3>BING Sentiment Analysis Conclusions</h3>
@@ -536,6 +536,8 @@ pre code {
 ## 10              New York Times  negative        3101
 ## 11                   USA Today  positive        2087
 ## 12                   USA Today  negative        1529</code></pre>
+<p>Positive/Negative Ratios: China Daily(3.595), Korea Herald (2.118), USA Today (1.365), Business Day (1.352), The Sun (1.328), NY Times (1.066)</p>
+<p>Similar to what we found with afinn, all sources had more positive language in regards to artificial intelligence than negative language (albeit it was still there). The sources with the highest positive to negative language ratio was China Daily which aligns with our results from afinn.The source that was most balanced in positive/negative language and the most negative was again the New York Times with an almost 1:1 ratio of positive to negative language. Thus, we see that even with the magnitude of positive/negative factored out, we reach a similar ranking of sources. The only switch was between USA Today and Business Day with USA Today edging out Business Day by just 0.003 in their positive negative ratios meaning Business Day used less strongly negative words or more strongly positive words which resulted in a higher score in afinn.</p>
 </div>
 </div>
 <div id="tf-idf" class="section level2">
@@ -551,22 +553,27 @@ pre code {
 ## * text -&gt; text...5
 ## * ...</code></pre>
 <pre><code>## Joining, by = &quot;newspapers&quot;</code></pre>
+<pre><code>## Joining, by = &quot;word&quot;</code></pre>
 </div>
 <div id="tf-idf-table" class="section level2">
 <h2>TF-IDF Table</h2>
-<pre><code>## # A tibble: 6 x 7
-##   newspapers   word      n  total     tf   idf tf_idf
-##   &lt;chr&gt;        &lt;chr&gt; &lt;int&gt;  &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-## 1 NY Times     the    7403 138126 0.0536     0      0
-## 2 Business Day the    3917  82423 0.0475     0      0
-## 3 NY Times     to     3796 138126 0.0275     0      0
-## 4 USA Today    the    3778  87306 0.0433     0      0
-## 5 NY Times     of     3691 138126 0.0267     0      0
-## 6 Korea Herald the    3636  78031 0.0466     0      0</code></pre>
+<pre><code>## # A tibble: 54,999 x 7
+##    newspapers   word                 n  total      tf   idf  tf_idf
+##    &lt;chr&gt;        &lt;chr&gt;            &lt;int&gt;  &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+##  1 Korea Herald 뷯뾽              1082  78031 0.0139  1.79  0.0248 
+##  2 China Daily  syndigate          110  65550 0.00168 1.79  0.00301
+##  3 The Sun      england            208  48350 0.00430 0.693 0.00298
+##  4 Korea Herald herald             128  78031 0.00164 1.79  0.00294
+##  5 China Daily  1493subject        100  65550 0.00153 1.79  0.00273
+##  6 China Daily  newspaperjournal   100  65550 0.00153 1.79  0.00273
+##  7 USA Today    usa                340  87306 0.00389 0.693 0.00270
+##  8 NY Times     a.i                528 138126 0.00382 0.693 0.00265
+##  9 China Daily  498                 91  65550 0.00139 1.79  0.00249
+## 10 China Daily  1493                90  65550 0.00137 1.79  0.00246
+## # … with 54,989 more rows</code></pre>
 </div>
-<div id="final-analysis" class="section level2">
-<h2>Final Analysis</h2>
-<p>Summary of the afinn, nrc, and bing stuff here</p>
+<div id="tf-idf-interesting-conclusions" class="section level2">
+<h2>TF-IDF Interesting Conclusions</h2>
 <p>summary of what the tf-idf tells us</p>
 </div>
 

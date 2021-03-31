@@ -1,6 +1,6 @@
 ---
-title: "Week 8 Megan"
-author: "Megan Lin"
+title: "Week 8 Tidy Text"
+author: "Megan Lin & James Powell"
 date: "3/24/2021"
 output: html_document
 ---
@@ -251,7 +251,7 @@ US_corpus_prep <- data_prep(US_corpus, 'V1','V5604')
 ```
 
 Next, we ran the tf_idf code on the consolidated corpuses to get the term and in document frequencies for each word by newspaper.
-```{r echo = FALSE}
+```{r echo = FALSE, inclue = FALSE}
 newspapers <- c("China Daily","Korea Herald","Business Day", "The Sun", "NY Times", "USA Today")
 tf_idf_text <- tibble(newspapers,text=t(tibble(china_corpus_prep,korea_corpus_prep, Africa_corpus_prep,Eng_corpus_prep,NY_corpus_prep, US_corpus_prep, .name_repair =
                                                "universal")))
