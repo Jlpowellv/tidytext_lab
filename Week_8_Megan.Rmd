@@ -106,27 +106,27 @@ england<-sentiment_analysis(Eng_files)
 
 ### China Daily
 ```{r echo=FALSE}
-head(china)
+china
 ```
 ### Korea Herald
 ```{r echo=FALSE}
-head(korea)
+korea
 ```
 ### New York Times
 ```{r echo=FALSE}
-head(ny)
+ny
 ```
 ### USA Today
 ```{r echo=FALSE}
-head(us)
+us
 ```
 ### Business Day
 ```{r echo=FALSE}
-head(africa)
+africa
 ```
 ### The Sun
 ```{r echo=FALSE}
-head(england)
+england
 ```
 
 ## Sentiment Analysis Methods {.tabset}
@@ -159,12 +159,14 @@ afinn <- avg_afinn(afinn, africa, "Business Day (South Africa)")
 afinn <- avg_afinn(afinn, england, "The Sun (England")
 afinn <- avg_afinn(afinn, ny, "New York Times")
 afinn <- avg_afinn(afinn, us, "USA Today")
-names(afinn) <- c("Newspaper", "Average Value")
+names(afinn) <- c("Newspaper", "AverageValue")
+
+afinn<-afinn[with(afinn, order(- AverageValue)), ]
 afinn
 ```
 Based on the afinn method, we see that China Daily has the highest average score of 0.925 which means that they likely have the most positive outlook on artificial intelligence in the future. Based on this assessment, The New York Times has the least positive outlook on artificial intelligence with an average score of 0.206.
 
-Interestingly, all news sources throughout these chosen countries used mostly positive language when writing about artificial intelligence which can be seen by the all positive scores.
+Interestingly, all news sources throughout these chosen countries used mostly positive language when writing about artificial intelligence which can be seen by the all positive average scores.
 
 ### BING Sentiment Analysis Conclusions
 To evaluate the bing method on these six newspapers, we further consolidated using the positive/negative association with each word so that the first column contained the newspaper, the second column contained positive/negative, and the third column contained the total count for the newspaper.
@@ -200,6 +202,9 @@ names(bing) <- c("Newspaper", "Sentiment", "Total Count")
 
 bing
 ```
+Positive/Negative Ratios: China Daily(3.595), Korea Herald (2.118), USA Today (1.365), Business Day (1.352), The Sun (1.328), NY Times (1.066)
+
+Similar to what we found with afinn, all sources had more positive language in regards to artificial intelligence than negative language (albeit it was still there). The sources with the highest positive to negative language ratio was China Daily which aligns with our results from afinn.The source that was most balanced in positive/negative language and the most negative was again the New York Times with an almost 1:1 ratio of positive to negative language. Thus, we see that even with the magnitude of positive/negative factored out, we reach a similar ranking of sources. The only switch was between USA Today and Business Day with USA Today edging out Business Day by just 0.003 in their positive negative ratios meaning Business Day used less strongly negative words or more strongly positive words which resulted in a higher score in afinn.
 
 
 ## TF-IDF
@@ -273,8 +278,7 @@ inag_words[with(inag_words, order(-tf_idf)), ]
 ```
 
 
-## Final Analysis
-Summary of the afinn, nrc, and bing stuff here
+## TF-IDF Interesting Conclusions
 
 
 summary of what the tf-idf tells us
