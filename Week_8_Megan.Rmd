@@ -2,7 +2,11 @@
 title: "Week 8 Tidy Text"
 author: "Megan Lin & James Powell"
 date: "3/24/2021"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+theme: minimalist
 ---
 
 ```{r setup, include=FALSE}
@@ -273,12 +277,40 @@ inag_words <- inag_words %>%
 ```
 
 ## TF-IDF Table
+Once we consildated the corpuses, this was our tf_idf table sorted in descending tf_idf values.
 ```{r echo = FALSE, include = TRUE}
 inag_words[with(inag_words, order(-tf_idf)), ]
 ```
 
 
 ## TF-IDF Interesting Conclusions
+Simply put, the tf-idf infrastructure needs some major extra layers of filtering as most of the results that we got feel like complete gibberish. However, when inspected there are few commonalities within the data we got. 
 
+A lot of the words with higher tf-idf values, regardless of newspaper, are companies that are the top technology companies such as: Spotify, Kakao, Genie, Amazon’s Alexa,
+Google Pixel, Cortana, and Samsung. 
 
-summary of what the tf-idf tells us
+As for the differences between the individual newspapers, there are many-- some of them more interesting than others. 
+
+For example, USA Today talks about the Avengers with high-rated words like Avengers and Thor. This makes sense  because of the focus on AI technology through characters like Iron Man to create a more futuristic, modern storyline. In addition, Vision, one of their characters that just got their own show and is a focal point for many people, is portrayed as a very advanced form of AI.
+
+Business Day is a newspaper from South Africa and has a less Hollywood-specific focus, instead having words related to resources/nature such as wildlife, ivory, metals, and trafficking, rated higher. We think this indicated a more practical standpoint that could be focused on industrialization or something similar. 
+
+This productive focus continues when looking at the China Daily, which has a more business/economics focus where words such as antibiotic, and Nasdaq are near the top of the list.
+
+The Sun (England) seems to pair artificial intelligence with politics & defense as shown by the high rating of Boris Johnson’s name, and the word “defense”.
+
+The NY Times similarly uses a lot of words that insinuate international practicality impacts such as China, FBI, Putin, and CIA. 
+
+Lastly the Korea Herald has a similar high focus on technology companies like Samsung, but mainly also pairs AI with more music/social media platforms like Genie and Kakao which differentiates from other countries' more practical/political/economically focused associations.
+
+## Limitations
+Within this data there are many limitations.
+
+First and foremost, we arbitrarily picked 100 articles from each source within the specified timeline if they had a hit on the topic of AI. However, these first 100 we found could be skewed in a specific way such as USA Today's focus on the Avengers.
+
+Secondly, because many of these newspapers were pulled from other countries, it was difficult to make sense of some of the more commonly used words without background knowledge. For example, with the Korea Herald's list of top tf_idf words, words like "genie" or "kakao" would not have made sense without a previous background knowledge. We did not have a similar background in other countries like South Africa, England, or China so it was a bit more difficult to draw conclusions.
+
+Third, a natural limitation of sentiment analysis is not being able to create a rating for these words in context to the words around it. Quoting another source's strongly worded criticisms or praise in our method are interpreted as the source's own interpretation even if they may be neutral or opposed to the quote's opinion. Overall, this was an issue we addressed in class of not being able to draw conclusions based on the overall context of the article, just on the word count frequency.
+
+## Next Steps
+Next, we would want to expand our dataset to include at least 3 newspapers from every region around the world (not necessarily each continent as some are larger than others). We could also further our search by looking at specific facets of AI to see how Deep Learning, IoT, Robotics, etc. individually are talked about by news sources around the world.
